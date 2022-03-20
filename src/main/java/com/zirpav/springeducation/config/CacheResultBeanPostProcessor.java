@@ -1,7 +1,6 @@
-package com.zirpav.springeducation.config;
+/*package com.zirpav.springeducation.config;
 
 import com.zirpav.springeducation.annotation.CacheResult;
-import com.zirpav.springeducation.model.CacheData;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.aop.framework.ProxyFactory;
@@ -78,3 +77,4 @@ public class CacheResultBeanPostProcessor implements BeanPostProcessor {
         return key;
     }
 }
+*/

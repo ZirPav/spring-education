@@ -2,7 +2,6 @@ package com.zirpav.springeducation.service;
 
 import com.zirpav.springeducation.annotation.CacheResult;
 import com.zirpav.springeducation.api.ExternalService;
-import com.zirpav.springeducation.model.CacheData;
 import com.zirpav.springeducation.model.ExternalInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,12 +17,6 @@ public class ExternalServiceImpl implements ExternalService {
 
     private Map<Integer, ExternalInfo> data;
 
-    private final CacheData cacheData;
-
-    public ExternalServiceImpl(CacheData cacheData) {
-        this.cacheData = cacheData;
-    }
-
     @PostConstruct
     public void init() {
         data = new HashMap<>();
@@ -36,31 +29,24 @@ public class ExternalServiceImpl implements ExternalService {
     @CacheResult
     @Override
     public ExternalInfo getExternalInfo(final Integer id) {
-        String key = this.getClass().getSimpleName() + "_" + "getExternalInfo" + "_" + "id" + "_" + id;
-        ExternalInfo externalInfo = (ExternalInfo) cacheData.getCacheData().get(key);
-        if (externalInfo != null) {
-            log.info("Получили {} из кэша по ключу {}", externalInfo, key);
-            return externalInfo;
-        }
         log.info("Получаем ExternalInfo по id={}", id);
-        return data.getOrDefault(id, null);
+        ExternalInfo externalInfo = data.get(id);
+        if (externalInfo == null) {
+            throw new RuntimeException("Не найдено!");
+        }
+        return externalInfo;
     }
 
     @CacheResult
     @Override
-    public String getSlogan(final String str) {
-        String key = this.getClass().getSimpleName() + "_" + "getSlogan" + "_" + "str" + "_" + str;
-        String output = (String) cacheData.getCacheData().get(key);
-        if (output != null) {
-            log.info("Получили {} из кэша по ключу {}", output, key);
-            return output;
-        }
-        return "Java: " + str;
+    public String getSlogan() {
+        return "ohhhh";
     }
 
     @PreDestroy
     public void clean() {
         log.info("Запускаем очистку данных");
         data.clear();
+        log.info("Выполнили очистку данных");
     }
 }
