@@ -1,6 +1,6 @@
-package com.zirpav.springeducation.aspect;
+package com.zirpav.springeducation.springbase.aspect;
 
-import com.zirpav.springeducation.model.ExternalInfo;
+import com.zirpav.springeducation.springbase.model.ExternalInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -12,13 +12,13 @@ import java.util.Objects;
 
 @Slf4j
 @Component
-@Aspect
+//@Aspect
 public class AnnotationAspect {
 
     @Value("${id-not-process}")
     private Integer idNotProcess;
 
-    @Around("@annotation(com.zirpav.springeducation.annotation.CheckRequest)")
+    @Around("@annotation(com.zirpav.springeducation.springbase.annotation.CheckRequest)")
     public Object annotateCheckRequestAspect(ProceedingJoinPoint joinPoint) {
         log.info("Вызвали метод: {} аннотированный @CheckRequest", joinPoint.getSignature().getName());
         Object[] args = joinPoint.getArgs();

@@ -1,4 +1,4 @@
-package com.zirpav.springeducation.annotation;
+package com.zirpav.springeducation.springbase.annotation;
 
 
 import java.lang.annotation.Documented;

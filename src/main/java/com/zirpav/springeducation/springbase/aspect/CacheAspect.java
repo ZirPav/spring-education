@@ -1,4 +1,4 @@
-package com.zirpav.springeducation.aspect;
+package com.zirpav.springeducation.springbase.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -11,12 +11,12 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
-@Aspect
+//@Aspect
 public class CacheAspect {
 
     private final Map<String, Object> cacheData = new ConcurrentHashMap<>();
 
-    @Around("@annotation(com.zirpav.springeducation.annotation.CacheResult)")
+    @Around("@annotation(com.zirpav.springeducation.springbase.annotation.CacheResult)")
     public Object cacheResultAspect(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
         String name = proceedingJoinPoint.getSignature().getName();
         Object[] args = proceedingJoinPoint.getArgs();

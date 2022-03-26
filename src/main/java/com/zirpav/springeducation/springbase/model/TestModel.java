@@ -1,4 +1,4 @@
-package com.zirpav.springeducation.model;
+package com.zirpav.springeducation.springbase.model;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

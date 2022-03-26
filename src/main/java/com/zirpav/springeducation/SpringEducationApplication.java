@@ -1,7 +1,7 @@
 package com.zirpav.springeducation;
 
-import com.zirpav.springeducation.api.ExternalService;
-import com.zirpav.springeducation.model.Flow;
+import com.zirpav.springeducation.springbase.api.ExternalService;
+import com.zirpav.springeducation.springbase.model.Flow;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -16,7 +16,7 @@ public class SpringEducationApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext applicationContext = SpringApplication.run(SpringEducationApplication.class, args);
-        ExternalService externalServiceImpl = (ExternalService) applicationContext.getBean("externalServiceImpl");
+        /*ExternalService externalServiceImpl = (ExternalService) applicationContext.getBean("externalServiceImpl");
         externalServiceImpl.getSlogan();
         externalServiceImpl.getSlogan();
 
@@ -26,7 +26,7 @@ public class SpringEducationApplication {
         flow.run(2);
         flow.run(3);
         flow.run(4);
-        flow.run(45);
+        flow.run(45);*/
     }
 
 }

@@ -1,7 +1,7 @@
-package com.zirpav.springeducation.model;
+package com.zirpav.springeducation.springbase.model;
 
-import com.zirpav.springeducation.api.ExternalService;
-import com.zirpav.springeducation.api.Process;
+import com.zirpav.springeducation.springbase.api.ExternalService;
+import com.zirpav.springeducation.springbase.api.Process;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
