@@ -1,4 +1,4 @@
-package com.zirpav.springeducation.aspect;
+package com.zirpav.springeducation.springbase.aspect;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Aspect
+//@Aspect
 public class CommonServiceAspect {
 
     @Before("within(com.zirpav.springeducation.service.*)")

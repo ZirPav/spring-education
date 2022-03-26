@@ -1,8 +1,8 @@
-package com.zirpav.springeducation.service;
+package com.zirpav.springeducation.springbase.service;
 
-import com.zirpav.springeducation.annotation.CacheResult;
-import com.zirpav.springeducation.api.ExternalService;
-import com.zirpav.springeducation.model.ExternalInfo;
+import com.zirpav.springeducation.springbase.annotation.CacheResult;
+import com.zirpav.springeducation.springbase.api.ExternalService;
+import com.zirpav.springeducation.springbase.model.ExternalInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.zirpav.springeducation.model;
+package com.zirpav.springeducation.springbase.model;
 
 import lombok.Builder;
 import lombok.Data;

@@ -1,8 +1,8 @@
-package com.zirpav.springeducation.service;
+package com.zirpav.springeducation.springbase.service;
 
-import com.zirpav.springeducation.annotation.CheckRequest;
-import com.zirpav.springeducation.api.Process;
-import com.zirpav.springeducation.model.ExternalInfo;
+import com.zirpav.springeducation.springbase.annotation.CheckRequest;
+import com.zirpav.springeducation.springbase.api.Process;
+import com.zirpav.springeducation.springbase.model.ExternalInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
