@@ -26,7 +26,13 @@ public class BankBookServiceImpl implements BankBookService {
     void init() {
         int userId = this.userId.getAndIncrement();
         int bankBookId = this.bankBookId.getAndIncrement();
-        bankBooks.put(userId, new ArrayList<>(Arrays.asList(BankBookDto.builder().number("3").amount(BigDecimal.ONE).currency("12").id(bankBookId).build())));
+        bankBooks.put(userId, new ArrayList<>(Arrays.asList(BankBookDto.builder()
+                .userId(userId)
+                .number("3")
+                .amount(BigDecimal.ONE)
+                .currency("12")
+                .id(bankBookId)
+                .build())));
     }
 
 
@@ -78,7 +84,7 @@ public class BankBookServiceImpl implements BankBookService {
                 if (bankBookDto.id().equals(dto.id())) {
                     bankBookDto.amount(dto.amount());
                     bankBookDto.currency(dto.currency());
-                    if (!bankBookDto.number().equals(dto.number())) {
+                    if (dto.number() != null) {
                         throw new RuntimeException("Некорректная операция");
                     }
                     return bankBookDto;
@@ -92,10 +98,11 @@ public class BankBookServiceImpl implements BankBookService {
     public BankBookDto deleteBankBookByBankBookId(Integer bankBookId) {
         for (Map.Entry<Integer, List<BankBookDto>> bankBooks : bankBooks.entrySet()) {
             List<BankBookDto> value = bankBooks.getValue();
-            BankBookDto bankBookDto = value.get(bankBookId);
-            if (bankBookDto != null) {
-                value.remove(bankBookId);
-                return bankBookDto;
+            for (BankBookDto bankBookDto : value) {
+                if (bankBookDto.id.equals(bankBookId)) {
+                    value.remove(bankBookDto);
+                    return bankBookDto;
+                }
             }
         }
         return null;
@@ -103,6 +110,9 @@ public class BankBookServiceImpl implements BankBookService {
 
     @Override
     public List<BankBookDto> deleteBankBookByUserId(Integer userId) {
-        return bankBooks.get(userId);
+        List<BankBookDto> bankBookDtos = bankBooks.get(userId);
+        List<BankBookDto> deleteBankBookDtos = new ArrayList<>(bankBookDtos);
+        bankBookDtos.clear();
+        return deleteBankBookDtos;
     }
 }
