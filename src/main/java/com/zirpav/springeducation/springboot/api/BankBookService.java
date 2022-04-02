@@ -8,9 +8,9 @@ public interface BankBookService {
 
     List<BankBookDto> getBankBookByUserId(Integer userId);
     BankBookDto getBankBookByBankBookId(Integer bankBookId);
-    BankBookDto create(BankBookDto dto, Integer userId);
-    BankBookDto update(BankBookDto dto, Integer userId);
-    BankBookDto deleteBankBookByBankBookId(Integer bankBookId);
+    BankBookDto create(BankBookDto dto);
+    BankBookDto update(BankBookDto dto);
+    void deleteBankBookByBankBookId(Integer bankBookId);
     List<BankBookDto> deleteBankBookByUserId(Integer userId);
 
 }
