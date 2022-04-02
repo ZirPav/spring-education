@@ -1,21 +1,18 @@
 package com.zirpav.springeducation;
 
-import com.zirpav.springeducation.springbase.api.ExternalService;
-import com.zirpav.springeducation.springbase.model.Flow;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.PropertySource;
 
 //todo Поправить кэш с помощью аннотации, поправить beanFactoryPostProcessor
 @SpringBootApplication
 @EnableAspectJAutoProxy
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yaml")
 public class SpringEducationApplication {
 
     public static void main(String[] args) {
-        ConfigurableApplicationContext applicationContext = SpringApplication.run(SpringEducationApplication.class, args);
+        SpringApplication.run(SpringEducationApplication.class, args);
         /*ExternalService externalServiceImpl = (ExternalService) applicationContext.getBean("externalServiceImpl");
         externalServiceImpl.getSlogan();
         externalServiceImpl.getSlogan();

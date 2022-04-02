@@ -102,7 +102,7 @@ public class BankBookServiceImpl implements BankBookService {
     public void deleteBankBookByBankBookId(Integer bankBookId) {
         for (Map.Entry<Integer, List<BankBookDto>> bankBooks : bankBooks.entrySet()) {
             List<BankBookDto> value = bankBooks.getValue();
-            boolean isDelete = value.removeIf(bankBookDto -> bankBookDto.id.equals(bankBookId));
+            value.removeIf(bankBookDto -> bankBookDto.id.equals(bankBookId));
         }
     }
 
