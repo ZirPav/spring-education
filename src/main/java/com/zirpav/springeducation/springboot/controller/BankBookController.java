@@ -51,7 +51,7 @@ public class BankBookController {
     @PostMapping("/bank-book/{userId}")
     public ResponseEntity createBankBook(@RequestBody BankBookDto dto, @PathVariable Integer userId) {
         try {
-            BankBookDto bankBookDto = bankBookService.create(dto, userId);
+            BankBookDto bankBookDto = bankBookService.create(dto);
             return ResponseEntity.ok().body(bankBookDto);
         } catch (Exception exception) {
             return ResponseEntity.ok().body(ErrorDto.builder().info(exception.getMessage()).build());
@@ -61,7 +61,7 @@ public class BankBookController {
     @PutMapping("/bank-book/{userId}")
     public ResponseEntity updateBankBook(@RequestBody BankBookDto dto, @PathVariable Integer userId) {
         try {
-            BankBookDto bankBookDto = bankBookService.update(dto, userId);
+            BankBookDto bankBookDto = bankBookService.update(dto);
             if (bankBookDto == null) {
                 return ResponseEntity.ok().body(ErrorDto.builder().info("Нечего обновлять").build());
             }
@@ -72,9 +72,8 @@ public class BankBookController {
     }
 
     @DeleteMapping("/bank-book/{bankBookId}")
-    public ResponseEntity deleteBankBookByBankBookId(@PathVariable Integer bankBookId) {
-        BankBookDto bankBookDto = bankBookService.deleteBankBookByBankBookId(bankBookId);
-        return ResponseEntity.ok().body(bankBookDto);
+    public void deleteBankBookByBankBookId(@PathVariable Integer bankBookId) {
+        bankBookService.deleteBankBookByBankBookId(bankBookId);
     }
 
     @DeleteMapping("/bank-book/by-user-id/{userId}")

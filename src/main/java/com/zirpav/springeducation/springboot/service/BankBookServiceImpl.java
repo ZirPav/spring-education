@@ -55,57 +55,55 @@ public class BankBookServiceImpl implements BankBookService {
     }
 
     @Override
-    public BankBookDto create(BankBookDto dto, Integer userId) {
+    public BankBookDto create(BankBookDto dto) {
+        final Integer userId = dto.userId();
         int bankBookId = this.bankBookId.getAndIncrement();
         List<BankBookDto> bankBookDtos = this.bankBooks.get(userId);
-        if (bankBookDtos != null) {
-            for (BankBookDto bankBookDto : bankBookDtos) {
-                if (bankBookDto.number().equals(dto.number()) && bankBookDto.currency().equals(dto.currency())) {
-                    throw new RuntimeException("Счет с данной валютой уже имеется в хранилище");
-                } else {
-                    BankBookDto newBankBookDto = dto.id(bankBookId);
-                    bankBookDtos.add(newBankBookDto);
-                    bankBooks.put(userId, bankBookDtos);
-                    return newBankBookDto;
-                }
-            }
+        if (bankBookDtos == null) {
+            BankBookDto newBankBookDto = dto.id(bankBookId);
+            List<BankBookDto> newBankBookDtos = List.of(newBankBookDto);
+            bankBooks.put(userId, newBankBookDtos);
+            return newBankBookDto;
         }
-        BankBookDto newBankBookDto = dto.id(bankBookId);
-        List<BankBookDto> newBankBookDtos = List.of(newBankBookDto);
-        bankBooks.put(userId, newBankBookDtos);
-        return newBankBookDto;
-    }
-
-    @Override
-    public BankBookDto update(BankBookDto dto, Integer userId) {
-        List<BankBookDto> bankBookDtos = this.bankBooks.get(userId);
-        if (bankBookDtos != null) {
-            for (BankBookDto bankBookDto : bankBookDtos) {
-                if (bankBookDto.id().equals(dto.id())) {
-                    bankBookDto.amount(dto.amount());
-                    bankBookDto.currency(dto.currency());
-                    if (dto.number() != null) {
-                        throw new RuntimeException("Некорректная операция");
-                    }
-                    return bankBookDto;
-                }
+        for (BankBookDto bankBookDto : bankBookDtos) {
+            if (bankBookDto.number().equals(dto.number()) && bankBookDto.currency().equals(dto.currency())) {
+                throw new RuntimeException("Счет с данной валютой уже имеется в хранилище");
+            } else {
+                BankBookDto newBankBookDto = dto.id(bankBookId);
+                bankBookDtos.add(newBankBookDto);
+                bankBooks.put(userId, bankBookDtos);
+                return newBankBookDto;
             }
         }
         return null;
     }
 
     @Override
-    public BankBookDto deleteBankBookByBankBookId(Integer bankBookId) {
+    public BankBookDto update(BankBookDto dto) {
+        final Integer userId = dto.userId();
+        List<BankBookDto> bankBookDtos = this.bankBooks.get(userId);
+        if (bankBookDtos == null) {
+            return null;
+        }
+        for (BankBookDto bankBookDto : bankBookDtos) {
+            if (bankBookDto.id().equals(dto.id())) {
+                bankBookDto.amount(dto.amount());
+                bankBookDto.currency(dto.currency());
+                if (dto.number() != null) {
+                    throw new RuntimeException("Некорректная операция");
+                }
+                return bankBookDto;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public void deleteBankBookByBankBookId(Integer bankBookId) {
         for (Map.Entry<Integer, List<BankBookDto>> bankBooks : bankBooks.entrySet()) {
             List<BankBookDto> value = bankBooks.getValue();
-            for (BankBookDto bankBookDto : value) {
-                if (bankBookDto.id.equals(bankBookId)) {
-                    value.remove(bankBookDto);
-                    return bankBookDto;
-                }
-            }
+            boolean isDelete = value.removeIf(bankBookDto -> bankBookDto.id.equals(bankBookId));
         }
-        return null;
     }
 
     @Override
