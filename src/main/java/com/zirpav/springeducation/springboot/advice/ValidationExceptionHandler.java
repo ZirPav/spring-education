@@ -1,6 +1,6 @@
 package com.zirpav.springeducation.springboot.advice;
 
-import com.zirpav.springeducation.springboot.dto.ErrorDto;
+import com.zirpav.springeducation.springboot.model.dto.ErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,6 +32,16 @@ public class ValidationExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
     public ErrorDto handleConstraintViolationException(ConstraintViolationException e) {
+        return ErrorDto.builder()
+                .status(HttpStatus.BAD_REQUEST.name())
+                .message(e.getMessage())
+                .build();
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(Exception.class)
+    public ErrorDto handleConstraintViolationException(Exception e) {
+        System.out.println(e.getMessage());
         return ErrorDto.builder()
                 .status(HttpStatus.BAD_REQUEST.name())
                 .message(e.getMessage())

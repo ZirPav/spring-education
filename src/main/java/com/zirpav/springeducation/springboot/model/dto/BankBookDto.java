@@ -1,4 +1,4 @@
-package com.zirpav.springeducation.springboot.dto;
+package com.zirpav.springeducation.springboot.model.dto;
 
 import lombok.Builder;
 import lombok.Data;
@@ -9,9 +9,9 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class BankBookDto implements Serializable {
-    public Integer id;
-    public Integer userId;
+    public Long id;
+    public UserDto user;
     public String number;
     public BigDecimal amount;
-    public String currency;
+    public CurrencyDto currency;
 }

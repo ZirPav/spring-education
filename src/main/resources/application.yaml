@@ -1,3 +1,10 @@
 server:
   port: 8090
 id-not-process: 3
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/account
+    username: account
+    password: account
+  jpa:
+    show-sql: true

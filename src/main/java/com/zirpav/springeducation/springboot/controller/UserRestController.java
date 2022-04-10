@@ -1,7 +1,8 @@
 package com.zirpav.springeducation.springboot.controller;
 
-import com.zirpav.springeducation.springboot.api.UserService;
-import com.zirpav.springeducation.springboot.dto.UserDto;
+import com.zirpav.springeducation.springboot.service.api.UserService;
+import com.zirpav.springeducation.springboot.model.dto.BankBookDto;
+import com.zirpav.springeducation.springboot.model.dto.UserDto;
 import com.zirpav.springeducation.springboot.validation.Create;
 import com.zirpav.springeducation.springboot.validation.Update;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class UserRestController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
         UserDto userDto = userService.getById(id);
         return ResponseEntity.ok().body(userDto);
     }
@@ -54,8 +55,13 @@ public class UserRestController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Integer id) {
+    public void deleteUser(@PathVariable Long id) {
         userService.delete(id);
+    }
+
+    @GetMapping("/bank-book/{id}")
+    public ResponseEntity<List<BankBookDto>> getAllBankBookDto(@PathVariable Long id) {
+        return ResponseEntity.ok().body(userService.getAllBankBookDtos(id));
     }
 
 }
