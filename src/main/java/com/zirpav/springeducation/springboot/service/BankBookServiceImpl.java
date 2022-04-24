@@ -2,115 +2,96 @@ package com.zirpav.springeducation.springboot.service;
 
 import com.zirpav.springeducation.springboot.api.BankBookService;
 import com.zirpav.springeducation.springboot.dto.BankBookDto;
+import com.zirpav.springeducation.springboot.exception.BankBookNotFoundException;
+import com.zirpav.springeducation.springboot.exception.BankBookNumberCannotBeModifiedException;
+import com.zirpav.springeducation.springboot.exception.BankBookWithCurrencyAlreadyHaveException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class BankBookServiceImpl implements BankBookService {
 
-    private final Map<Integer, List<BankBookDto>> bankBooks = new ConcurrentHashMap<>();
-    private final AtomicInteger userId = new AtomicInteger(1);
-    private final AtomicInteger bankBookId = new AtomicInteger(1);
+    private final Map<Integer, BankBookDto> bankBooks = new ConcurrentHashMap<>();
+    private final AtomicInteger sequenceId = new AtomicInteger(1);
 
     @PostConstruct
     void init() {
-        int userId = this.userId.getAndIncrement();
-        int bankBookId = this.bankBookId.getAndIncrement();
-        bankBooks.put(userId, new ArrayList<>(Arrays.asList(BankBookDto.builder()
-                .userId(userId)
-                .number("3")
+        bankBooks.put(1, BankBookDto.builder()
+                .id(1)
+                .userId(1)
+                .number("number1")
                 .amount(BigDecimal.ONE)
-                .currency("12")
-                .id(bankBookId)
-                .build())));
-    }
-
-
-    @Override
-    public List<BankBookDto> getBankBookByUserId(Integer userId) {
-        return bankBooks.get(userId);
+                .currency("RUB")
+                .build());
     }
 
     @Override
-    public BankBookDto getBankBookByBankBookId(Integer bankBookId) {
-        for (Map.Entry<Integer, List<BankBookDto>> bankBook : bankBooks.entrySet()) {
-            List<BankBookDto> value = bankBook.getValue();
-            for (BankBookDto bankBookDto : value) {
-                if (bankBookId.equals(bankBookDto.id)) {
-                    return bankBookDto;
-                }
-            }
+    public BankBookDto findById(Integer bankBookId) {
+        BankBookDto bankBookDto = bankBooks.get(bankBookId);
+        if (bankBookDto == null) {
+            throw new BankBookNotFoundException("Счёт не найден!");
         }
-        throw new NullPointerException(String.format("Отсутствует BankBook по id=%d", bankBookId));
+        return bankBookDto;
+    }
+
+    @Override
+    public List<BankBookDto> findByUserId(Integer userId) {
+        List<BankBookDto> bankBookDtos = bankBooks.values().stream()
+                .filter(bankBookDto -> userId.equals(bankBookDto.userId()))
+                .collect(Collectors.toList());
+        if (CollectionUtils.isEmpty(bankBookDtos)) {
+            throw new BankBookNotFoundException("Для данного пользователя нет счетов");
+        }
+        return bankBookDtos;
     }
 
     @Override
     public BankBookDto create(BankBookDto dto) {
-        final Integer userId = dto.userId();
-        int bankBookId = this.bankBookId.getAndIncrement();
-        List<BankBookDto> bankBookDtos = this.bankBooks.get(userId);
-        if (bankBookDtos == null) {
-            BankBookDto newBankBookDto = dto.id(bankBookId);
-            List<BankBookDto> newBankBookDtos = List.of(newBankBookDto);
-            bankBooks.put(userId, newBankBookDtos);
-            return newBankBookDto;
+        boolean hasBankBook = bankBooks.values().stream()
+                .anyMatch(bankBook -> bankBook.userId.equals(dto.userId)
+                        && bankBook.number().equals(dto.number())
+                        && bankBook.currency().equals(dto.currency()));
+        if (hasBankBook) {
+            throw new BankBookWithCurrencyAlreadyHaveException("Счет с данной валютой уже имеется!");
         }
-        for (BankBookDto bankBookDto : bankBookDtos) {
-            if (bankBookDto.number().equals(dto.number()) && bankBookDto.currency().equals(dto.currency())) {
-                throw new RuntimeException("Счет с данной валютой уже имеется в хранилище");
-            } else {
-                BankBookDto newBankBookDto = dto.id(bankBookId);
-                bankBookDtos.add(newBankBookDto);
-                bankBooks.put(userId, bankBookDtos);
-                return newBankBookDto;
-            }
-        }
-        return null;
+
+        int id = sequenceId.getAndIncrement();
+        dto.id(id);
+        bankBooks.put(id, dto);
+        return dto;
     }
 
     @Override
     public BankBookDto update(BankBookDto dto) {
-        final Integer userId = dto.userId();
-        List<BankBookDto> bankBookDtos = this.bankBooks.get(userId);
-        if (bankBookDtos == null) {
-            return null;
+        BankBookDto bankBookDto = bankBooks.get(dto.id());
+        if (bankBookDto == null) {
+            throw new BankBookNotFoundException("Лицевой счет не найден!");
         }
-        for (BankBookDto bankBookDto : bankBookDtos) {
-            if (bankBookDto.id().equals(dto.id())) {
-                bankBookDto.amount(dto.amount());
-                bankBookDto.currency(dto.currency());
-                if (dto.number() != null) {
-                    throw new RuntimeException("Некорректная операция");
-                }
-                return bankBookDto;
-            }
+        if (!bankBookDto.number().equals(dto.number())) {
+            throw new BankBookNumberCannotBeModifiedException("Номер лицевого счета менять нельзя!");
         }
-        return null;
+        bankBooks.put(dto.id(), dto);
+        return dto;
     }
 
     @Override
-    public void deleteBankBookByBankBookId(Integer bankBookId) {
-        for (Map.Entry<Integer, List<BankBookDto>> bankBooks : bankBooks.entrySet()) {
-            List<BankBookDto> value = bankBooks.getValue();
-            value.removeIf(bankBookDto -> bankBookDto.id.equals(bankBookId));
-        }
+    public void delete(Integer bankBookId) {
+        bankBooks.remove(bankBookId);
     }
 
     @Override
-    public List<BankBookDto> deleteBankBookByUserId(Integer userId) {
-        List<BankBookDto> bankBookDtos = bankBooks.get(userId);
-        List<BankBookDto> deleteBankBookDtos = new ArrayList<>(bankBookDtos);
-        bankBookDtos.clear();
-        return deleteBankBookDtos;
+    public void deleteByUserId(Integer userId) {
+        bankBooks.values().removeIf(it -> it.userId().equals(userId));
     }
+
 }
