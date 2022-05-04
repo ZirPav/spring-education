@@ -17,6 +17,7 @@ public class SpringEducationApplication {
         System.out.println("One_1");
         System.out.println("One_2");
         System.out.println("Two");
+        System.out.println("Three");
         /*ExternalService externalServiceImpl = (ExternalService) applicationContext.getBean("externalServiceImpl");
         externalServiceImpl.getSlogan();
         externalServiceImpl.getSlogan();
