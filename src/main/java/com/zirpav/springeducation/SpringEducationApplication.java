@@ -13,6 +13,7 @@ public class SpringEducationApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(SpringEducationApplication.class, args);
+        System.out.println("One");
         /*ExternalService externalServiceImpl = (ExternalService) applicationContext.getBean("externalServiceImpl");
         externalServiceImpl.getSlogan();
         externalServiceImpl.getSlogan();
